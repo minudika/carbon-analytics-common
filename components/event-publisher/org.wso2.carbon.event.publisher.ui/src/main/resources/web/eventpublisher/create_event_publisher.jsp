@@ -31,38 +31,38 @@
 <fmt:bundle basename="org.wso2.carbon.event.publisher.ui.i18n.Resources">
 
     <carbon:jsi18n
-    		resourceBundle="org.wso2.carbon.event.publisher.ui.i18n.Resources"
-    		request="<%=request%>"
-    		namespace="org.wso2.carbon.event.publisher.ui"/>
+            resourceBundle="org.wso2.carbon.event.publisher.ui.i18n.Resources"
+            request="<%=request%>"
+            namespace="org.wso2.carbon.event.publisher.ui"/>
 
-<script type="text/javascript" src="../eventpublisher/js/event_publisher.js"></script>
+    <script type="text/javascript" src="../eventpublisher/js/event_publisher.js"></script>
 <script type="text/javascript" src="../eventpublisher/js/create_eventPublisher_helper.js"></script>
-<script type="text/javascript" src="../eventpublisher/js/registry-browser.js"></script>
-<link rel="stylesheet" href="../eventpublisher/css/eventPublisher.css"/>
+    <script type="text/javascript" src="../eventpublisher/js/registry-browser.js"></script>
+    <link rel="stylesheet" href="../eventpublisher/css/eventPublisher.css"/>
 
-<script type="text/javascript" src="../resources/js/resource_util.js"></script>
-<jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
-<link rel="stylesheet" type="text/css" href="../resources/css/registry.css"/>
-<script type="text/javascript" src="../ajax/js/prototype.js"></script>
-<script type="text/javascript"
-        src="../eventpublisher/js/create_eventPublisher_helper.js"></script>
+    <script type="text/javascript" src="../resources/js/resource_util.js"></script>
+    <jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/registry.css"/>
+    <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+    <script type="text/javascript"
+            src="../eventpublisher/js/create_eventPublisher_helper.js"></script>
 
-<script type="text/javascript">
-    jQuery(document).ready(function () {
-        showEventStreamDefinition();
-    });
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            showEventStreamDefinition();
+        });
 
-</script>
+    </script>
 
-<div id="custom_dcontainer" style="display:none"></div>
-<div id="middle">
-<h2><fmt:message key="title.event.publisher.create"/></h2>
+    <div id="custom_dcontainer" style="display:none"></div>
+    <div id="middle">
+        <h2><fmt:message key="title.event.publisher.create"/></h2>
 
-<div id="workArea">
+        <div id="workArea">
 
-<form name="inputForm" action="#" method="post" id="addEventPublisher">
-<table style="width:100%" id="eventPublisherAdd" class="styledLeft">
-<%
+            <form name="inputForm" action="#" method="post" id="addEventPublisher">
+                <table style="width:100%" id="eventPublisherAdd" class="styledLeft">
+                            <%
     EventPublisherAdminServiceStub eventPublisherAdminServiceStub = EventPublisherUIUtils.getEventPublisherAdminService(config, session, request);
     String[] outputAdapterTypes = eventPublisherAdminServiceStub.getAllOutputAdapterTypes();
 
@@ -112,413 +112,416 @@
 
         List<String> attributeList = EventPublisherUIUtils.getAttributeListWithPrefix(streamDefinitionDto);
 %>
-<br/>
-<thead>
-<tr>
-    <th><fmt:message key="title.event.publisher.details"/></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="formRaw">
-<table id="eventPublisherInputTable" class="normal-nopadding"
-       style="width:100%">
-<tbody>
+                    <br/>
+                    <thead>
+                    <tr>
+                        <th><fmt:message key="title.event.publisher.details"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="formRaw">
+                            <table id="eventPublisherInputTable" class="normal-nopadding"
+                                   style="width:100%">
+                                <tbody>
 
-<tr>
+                                <tr>
     <td class="leftCol-med"><fmt:message key="event.publisher.name"/><span class="required">*</span>
-    </td>
+                                    </td>
     <td><input type="text" name="eventPublisherName" id="eventPublisherId"
-               class="initE"
+                                               class="initE"
 
-               value=""
-               style="width:75%"/>
+                                               value=""
+                                               style="width:75%"/>
 
-        <div class="sectionHelp">
-            <fmt:message key="event.publisher.name.help"/>
-        </div>
-    </td>
-</tr>
+                                        <div class="sectionHelp">
+                                            <fmt:message key="event.publisher.name.help"/>
+                                        </div>
+                                    </td>
+                                </tr>
 
-<tr>
-    <td colspan="2">
-        <b><fmt:message key="from.heading"/></b>
-    </td>
-</tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <b><fmt:message key="from.heading"/></b>
+                                    </td>
+                                </tr>
 
-<tr>
+                                <tr>
     <td><fmt:message key="event.source.name"/><span class="required">*</span></td>
-    <td><select name="streamIdFilter"
+                                    <td><select name="streamIdFilter"
                 onchange="showEventStreamDefinition()" id="streamIdFilter">
-        <%
+                                        <%
 
-            if (streamIds != null) {
-                Arrays.sort(streamIds);
-                for (String aStreamId : streamIds) {
-        %>
-        <option><%=aStreamId%>
-        </option>
-        <%
-                }
-            }
-        %>
+                                            if (streamIds != null) {
+                                                Arrays.sort(streamIds);
+                                                for (String aStreamId : streamIds) {
+                                        %>
+                                        <option><%=aStreamId%>
+                                        </option>
+                                        <%
+                                                }
+                                            }
+                                        %>
 
-    </select>
+                                    </select>
 
-        <div class="sectionHelp">
-            <fmt:message key="event.source.name.help"/>
-        </div>
-    </td>
+                                        <div class="sectionHelp">
+                                            <fmt:message key="event.source.name.help"/>
+                                        </div>
+                                    </td>
 
-</tr>
+                                </tr>
 
-<tr>
-    <td>
-        <fmt:message key="stream.attributes"/>
-    </td>
-    <td>
+                                <tr>
+                                    <td>
+                                        <fmt:message key="stream.attributes"/>
+                                    </td>
+                                    <td>
         <textArea class="expandedTextarea" id="streamDefinitionText" name="streamDefinitionText"
                   readonly="true"
                   cols="60"><%=streamDefinition%>
         </textArea>
 
-    </td>
+                                    </td>
 
-</tr>
-<tr>
-    <td>
-        <b><fmt:message key="to.heading"/></b>
-    </td>
-</tr>
-<tr>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b><fmt:message key="to.heading"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
     <td><fmt:message key="event.adapter.type"/><span class="required">*</span></td>
-    <td>
-        <table>
+                                    <td>
+                                        <table>
             <td class="custom-noPadding" width="60%"><select name="eventAdapterTypeFilter"
                                                              onchange="loadEventAdapterRelatedProperties('<fmt:message
-                                                                     key="to.heading"/>')"
-                                                             id="eventAdapterTypeFilter">
-                <%
-                    for (String outputAdapterType : outputAdapterTypes) {
-                %>
-                <option value="<%=outputAdapterType%>"><%=outputAdapterType%>
-                </option>
-                <%
-                    }
-                %>
+                                                                key="to.heading"/>')"
+                                                    id="eventAdapterTypeFilter">
+                                                <%
+                                                    for (String outputAdapterType : outputAdapterTypes) {
+                                                %>
+                                                <option value="<%=outputAdapterType%>"><%=outputAdapterType%>
+                                                </option>
+                                                <%
+                                                    }
+                                                %>
 
-            </select>
+                                            </select>
 
-                <div class="sectionHelp">
-                    <fmt:message key="event.adapter.type.help"/>
-                </div>
-            </td>
+                                                <div class="sectionHelp">
+                                                    <fmt:message key="event.adapter.type.help"/>
+                                                </div>
+                                            </td>
             <td width="40%" id="addOutputEventAdapterTD" class="custom-noPadding"></td>
-        </table>
-    </td>
-</tr>
+                                        </table>
+                                    </td>
+                                </tr>
 
 <tr id="eventPublisherUsageTipsRowId"><td hidden><fmt:message key="event.adapter.usage.tips"/></td>
-    <td hidden></td>
-</tr>
+                                    <td hidden></td>
+                                </tr>
 
-<%
+                                        <%
     OutputAdapterConfigurationDto outputAdapterConfigurationDto = eventPublisherAdminServiceStub.getOutputAdapterConfigurationSchema(firstEventAdapterType);
     if (outputAdapterConfigurationDto != null) {
 %>
-<%
+                                        <%
     DetailOutputAdapterPropertyDto[] eventAdapterProperties = outputAdapterConfigurationDto.getOutputEventAdapterStaticProperties();
     int initialDynamicIndex = 0;
     if (eventAdapterProperties != null && eventAdapterProperties.length > 0) {
         initialDynamicIndex=eventAdapterProperties.length;
 %>
-<tr>
-    <td>
+                                <tr>
+                                    <td>
         <b><i><span style="color: #666666; "><fmt:message key="static.properties.heading"/></span></i></b>
-    </td>
-</tr>
-<%
+                                    </td>
+                                </tr>
+                                        <%
     for (int index=0; index < eventAdapterProperties.length; index++) {
 %>
-<tr>
-    <td class="leftCol-med"><%=eventAdapterProperties[index].getDisplayName()%>
-        <%
-            String propertyId = "property_";
-            if (eventAdapterProperties[index].getRequired()) {
-                propertyId = "property_Required_";
-        %>
-        <span class="required">*</span>
-        <%
-            }
-        %>
-    </td>
-    <%
-        String type = "text";
-        if (eventAdapterProperties[index].getSecured()) {
-            type = "password";
-        }
-    %>
-    <td>
-        <div class=outputFields>
-            <%
-                if (eventAdapterProperties[index].getOptions()[0] != null) {
-            %>
-            <select name="<%=eventAdapterProperties[index].getKey()%>"
-                    id="<%=propertyId%><%=index%>">
-                <%
-                    for (String property : eventAdapterProperties[index].getOptions()) {
-                        if (property.equals(eventAdapterProperties[index].getDefaultValue())) {
-                %>
-                <option selected="selected"><%=property%>
-                </option>
-                <% } else { %>
-                <option><%=property%>
-                </option>
-                <% }
-                } %>
-            </select>
+                                <tr>
+                                    <td class="leftCol-med"><%=eventAdapterProperties[index].getDisplayName()%>
+                                        <%
+                                            String propertyId = "property_";
+                                            if (eventAdapterProperties[index].getRequired()) {
+                                                propertyId = "property_Required_";
+                                        %>
+                                        <span class="required">*</span>
+                                        <%
+                                            }
+                                        %>
+                                    </td>
+                                    <%
+                                        String type = "text";
+                                        if (eventAdapterProperties[index].getSecured()) {
+                                            type = "password";
+                                        }
+                                    %>
+                                    <td>
+                                        <div class=outputFields>
+                                            <%
+                                                if (eventAdapterProperties[index].getOptions()[0] != null) {
+                                            %>
+                                            <select name="<%=eventAdapterProperties[index].getKey()%>"
+                                                    id="<%=propertyId%><%=index%>">
+                                                <%
+                                                    for (String property : eventAdapterProperties[index].getOptions()) {
+                                                        if (property.equals(eventAdapterProperties[index].getDefaultValue())) {
+                                                %>
+                                                <option selected="selected"><%=property%>
+                                                </option>
+                                                <% } else { %>
+                                                <option><%=property%>
+                                                </option>
+                                                <% }
+                                                } %>
+                                            </select>
 
-            <% } else { %>
-            <input type="<%=type%>"
-                   name="<%=eventAdapterProperties[index].getKey()%>"
-                   id="<%=propertyId%><%=index%>" class="initE"
-                   style="width:75%"
-                   value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
-                    />
+                                            <% } else { %>
+                                            <input type="<%=type%>"
+                                                    <% if("password".equals(type)) {%>
+                                                   autocomplete="off"
+                                                    <% }%>
+                                                   name="<%=eventAdapterProperties[index].getKey()%>"
+                                                   id="<%=propertyId%><%=index%>" class="initE"
+                                                   style="width:75%"
+                                                   value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
+                                            />
 
-            <% }
+                                            <% }
 
-                if (eventAdapterProperties[index].getHint() != null) { %>
-            <div class="sectionHelp">
-                <%=eventAdapterProperties[index].getHint()%>
-            </div>
-            <% } %>
-        </div>
-    </td>
-</tr>
-<%
+                                                if (eventAdapterProperties[index].getHint() != null) { %>
+                                            <div class="sectionHelp">
+                                                <%=eventAdapterProperties[index].getHint()%>
+                                            </div>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                </tr>
+                                        <%
         }
     }
     eventAdapterProperties = outputAdapterConfigurationDto.getOutputEventAdapterDynamicProperties();
     if (eventAdapterProperties != null && eventAdapterProperties.length > 0) {
 %>
-<tr>
-    <td>
+                                <tr>
+                                    <td>
         <b><i><span style="color: #666666; "><fmt:message key="dynamic.properties.heading"/></span></i></b>
-    </td>
-</tr>
-<%
+                                    </td>
+                                </tr>
+                                        <%
 
     for ( int index = 0; index < eventAdapterProperties.length; index++) {
 %>
-<tr>
-    <td class="leftCol-med"><%=eventAdapterProperties[index].getDisplayName()%>
-        <%
-            String propertyId = "property_";
-            if (eventAdapterProperties[index].getRequired()) {
-                propertyId = "property_Required_";
+                                <tr>
+                                    <td class="leftCol-med"><%=eventAdapterProperties[index].getDisplayName()%>
+                                        <%
+                                            String propertyId = "property_";
+                                            if (eventAdapterProperties[index].getRequired()) {
+                                                propertyId = "property_Required_";
 
-        %>
-        <span class="required">*</span>
-        <%
-            }
-        %>
-    </td>
-    <%
-        String type = "text";
-        if (eventAdapterProperties[index].getSecured()) {
-            type = "password";
-        }
-    %>
+                                        %>
+                                        <span class="required">*</span>
+                                        <%
+                                            }
+                                        %>
+                                    </td>
+                                    <%
+                                        String type = "text";
+                                        if (eventAdapterProperties[index].getSecured()) {
+                                            type = "password";
+                                        }
+                                    %>
 
-    <td>
-        <div class=outputFields>
-            <%
-                if (eventAdapterProperties[index].getOptions()[0] != null) {
-            %>
+                                    <td>
+                                        <div class=outputFields>
+                                            <%
+                                                if (eventAdapterProperties[index].getOptions()[0] != null) {
+                                            %>
 
-            <select name="<%=eventAdapterProperties[index].getKey()%>"
-                    id="<%=propertyId%><%=index+initialDynamicIndex%>">
+                                            <select name="<%=eventAdapterProperties[index].getKey()%>"
+                                                    id="<%=propertyId%><%=index+initialDynamicIndex%>">
 
-                <%
-                    for (String property : eventAdapterProperties[index].getOptions()) {
-                        if (property.equals(eventAdapterProperties[index].getDefaultValue())) {
-                %>
-                <option selected="selected"><%=property%>
-                </option>
-                <% } else { %>
-                <option><%=property%>
-                </option>
-                <% }
-                } %>
-            </select>
+                                                <%
+                                                    for (String property : eventAdapterProperties[index].getOptions()) {
+                                                        if (property.equals(eventAdapterProperties[index].getDefaultValue())) {
+                                                %>
+                                                <option selected="selected"><%=property%>
+                                                </option>
+                                                <% } else { %>
+                                                <option><%=property%>
+                                                </option>
+                                                <% }
+                                                } %>
+                                            </select>
 
             <% } else {  if(type.equals("password")) { %>
-                    <input type="<%=type%>"
-                        autocomplete="off"
-                        name="<%=eventAdapterProperties[index].getKey()%>"
+                                            <input type="<%=type%>"
+                                                   autocomplete="off"
+                                                   name="<%=eventAdapterProperties[index].getKey()%>"
                         id="<%=propertyId%><%=index+initialDynamicIndex%>" class="initE"
-                        style="width:75%"
-                        value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
-                    />
-                <% } else { %>
-                    <input type="<%=type%>"
-                        name="<%=eventAdapterProperties[index].getKey()%>"
+                                                   style="width:75%"
+                                                   value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
+                                            />
+                                            <% } else { %>
+                                            <input type="<%=type%>"
+                                                   name="<%=eventAdapterProperties[index].getKey()%>"
                         id="<%=propertyId%><%=index+initialDynamicIndex%>" class="initE"
-                        style="width:75%"
-                        value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
-                    />
+                                                   style="width:75%"
+                                                   value="<%= (eventAdapterProperties[index].getDefaultValue()) != null ? eventAdapterProperties[index].getDefaultValue() : "" %>"
+                                            />
             <% }}
 
-                if (eventAdapterProperties[index].getHint() != null) { %>
-            <div class="sectionHelp">
-                <%=eventAdapterProperties[index].getHint()%>
-            </div>
-            <% } %>
-        </div>
-    </td>
+                                                if (eventAdapterProperties[index].getHint() != null) { %>
+                                            <div class="sectionHelp">
+                                                <%=eventAdapterProperties[index].getHint()%>
+                                            </div>
+                                            <% } %>
+                                        </div>
+                                    </td>
 
-</tr>
-<%
+                                </tr>
+                                        <%
         }
     }
 %>
 
-<tr>
-    <td colspan="2">
-        <b><fmt:message key="mapping.heading"/></b>
-    </td>
-</tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <b><fmt:message key="mapping.heading"/></b>
+                                    </td>
+                                </tr>
 
-<tr>
+                                <tr>
     <td><fmt:message key="message.format"/><span class="required">*</span></td>
-    <td><select name="mappingTypeFilter"
+                                    <td><select name="mappingTypeFilter"
                 onchange="showEventStreamDefinition()" id="mappingTypeFilter">
-        <%
-            String[] messageFormats = outputAdapterConfigurationDto.getSupportedMessageFormats();
-            String firstMappingTypeName = null;
+                                        <%
+                                            String[] messageFormats = outputAdapterConfigurationDto.getSupportedMessageFormats();
+                                            String firstMappingTypeName = null;
 
-            if (messageFormats != null) {
-                firstMappingTypeName = messageFormats[0];
-                for (String mappingType : messageFormats) {
-        %>
-        <option><%=mappingType%>
-        </option>
-        <%
-                }
-
-
-        %>
-
-    </select>
-
-        <div class="sectionHelp">
-            <fmt:message key="message.format.help"/>
-        </div>
-    </td>
-
-</tr>
+                                            if (messageFormats != null) {
+                                                firstMappingTypeName = messageFormats[0];
+                                                for (String mappingType : messageFormats) {
+                                        %>
+                                        <option><%=mappingType%>
+                                        </option>
+                                        <%
+                                            }
 
 
-<tr>
-    <td><a href="#"
-           style="background-image:url(images/add.gif);"
-           class="icon-link" onclick="handleAdvancedMapping()">
-        Advanced
-    </a></td>
-</tr>
+                                        %>
+
+                                    </select>
+
+                                        <div class="sectionHelp">
+                                            <fmt:message key="message.format.help"/>
+                                        </div>
+                                    </td>
+
+                                </tr>
 
 
-<tr>
-<td class="formRaw" colspan="2">
-<div id="outerDiv" style="display:none">
+                                <tr>
+                                    <td><a href="#"
+                                           style="background-image:url(images/add.gif);"
+                                           class="icon-link" onclick="handleAdvancedMapping()">
+                                        Advanced
+                                    </a></td>
+                                </tr>
+
+
+                                <tr>
+                                    <td class="formRaw" colspan="2">
+                                        <div id="outerDiv" style="display:none">
                 <%if (firstMappingTypeName != null) {
                     if (firstMappingTypeName.equals("wso2event")) {%>
                         <jsp:include page="wso2event_mapping_ui.jsp" flush="true">
-                            <jsp:param name="streamNameWithVersion"
-                                       value="<%=streamId%>"/>
-                        </jsp:include>
+                                                <jsp:param name="streamNameWithVersion"
+                                                           value="<%=streamId%>"/>
+                                            </jsp:include>
                 <%}else if (firstMappingTypeName.equals("xml")) {%>
-                    <jsp:include page="xml_mapping_ui.jsp" flush="true"/>
-                <%} else if (firstMappingTypeName.equals("map")) {%>
-                    <jsp:include page="map_mapping_ui.jsp" flush="true">
-                        <jsp:param name="streamNameWithVersion"
-                                   value="<%=streamId%>"/>
-                    </jsp:include>
-                <%} else if (firstMappingTypeName.equals("text")) {%>
-                    <jsp:include page="text_mapping_ui.jsp" flush="true"/>
-                <%} else if (firstMappingTypeName.equals("json")) {%>
-                    <jsp:include page="json_mapping_ui.jsp" flush="true"/>
+                                            <jsp:include page="xml_mapping_ui.jsp" flush="true"/>
+                                            <%} else if (firstMappingTypeName.equals("map")) {%>
+                                            <jsp:include page="map_mapping_ui.jsp" flush="true">
+                                                <jsp:param name="streamNameWithVersion"
+                                                           value="<%=streamId%>"/>
+                                            </jsp:include>
+                                            <%} else if (firstMappingTypeName.equals("text")) {%>
+                                            <jsp:include page="text_mapping_ui.jsp" flush="true"/>
+                                            <%} else if (firstMappingTypeName.equals("json")) {%>
+                                            <jsp:include page="json_mapping_ui.jsp" flush="true"/>
                 <%}
-            }
-        }
+                                                            }
+                                                        }
     }%>
-</div>
+                                        </div>
 
 
-</div>
-</td>
-</tr>
+        </div>
+        </td>
+        </tr>
 
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-    <td class="buttonRow">
-        <button class="button"
-               onclick="addEventPublisher(document.getElementById('addEventPublisher') ,document.getElementById('streamIdFilter')[document.getElementById('streamIdFilter').selectedIndex].value); return false;">
-        <fmt:message key="add.event.publisher"/></button>
-        <button class="button"
-                onclick="testPublisherConnection(); return false;">
-            <fmt:message key="test.event.publisher"/></button>
-    </td>
-</tr>
-<tr style="display: none">
-    <td id="dynamicHeader" name="<fmt:message key="dynamic.properties.heading"/>"></td>
-    <td id="staticHeader" name="<fmt:message key="static.properties.heading"/>"></td>
-</tr>
-</tbody>
-<% } else { %>
-<tbody>
-<tr>
-    <td class="formRaw">
-        <table id="noEventBuilderInputTable" class="normal-nopadding"
-               style="width:100%">
-            <tbody>
+        </tbody>
+        </table>
+        </td>
+        </tr>
+        <tr>
+            <td class="buttonRow">
+                <button class="button"
+                        onclick="addEventPublisher(document.getElementById('addEventPublisher') ,document.getElementById('streamIdFilter')[document.getElementById('streamIdFilter').selectedIndex].value); return false;">
+                    <fmt:message key="add.event.publisher"/></button>
+                <button class="button"
+                        onclick="testPublisherConnection(); return false;">
+                    <fmt:message key="test.event.publisher"/></button>
+            </td>
+        </tr>
+        <tr style="display: none">
+            <td id="dynamicHeader" name="<fmt:message key="dynamic.properties.heading"/>"></td>
+            <td id="staticHeader" name="<fmt:message key="static.properties.heading"/>"></td>
+        </tr>
+        </tbody>
+        <% } else { %>
+        <tbody>
+        <tr>
+            <td class="formRaw">
+                <table id="noEventBuilderInputTable" class="normal-nopadding"
+                       style="width:100%">
+                    <tbody>
 
-            <tr>
+                    <tr>
                 <%if(streamId == null){%>
 
-                <td class="leftCol-med" colspan="2">
+                        <td class="leftCol-med" colspan="2">
                         <span style="float: left; position: relative; margin-top: 5px;">
                             <fmt:message key="event.receiver.error.no.stream"/>
                         </span>
-                    <a onclick="createImportedStreamDefinition()"
-                       style="background-image:url(images/add.gif);"
-                       class="icon-link">
-                        Add Event Stream
-                    </a>
-                </td>
+                            <a onclick="createImportedStreamDefinition()"
+                               style="background-image:url(images/add.gif);"
+                               class="icon-link">
+                                Add Event Stream
+                            </a>
+                        </td>
 
 
                 <%}else{%>
                 <td class="leftCol-med"  colspan="2">
-                    <fmt:message key="event.receiver.error.no.output.adapter"/>
-                </td>
+                            <fmt:message key="event.receiver.error.no.output.adapter"/>
+                        </td>
 
-                <%}%>
+                        <%}%>
 
 
-            </tr>
-            </tbody>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+        <% } %>
         </table>
-    </td>
-</tr>
-</tbody>
-<% } %>
-</table>
-</form>
-</div>
-</div>
+        </form>
+    </div>
+    </div>
 </fmt:bundle>

@@ -221,7 +221,7 @@ function searchTraceLogsCallback() {
 
                     %>
                     <tr>
-                        <td><%=Encode.forHtmlContent(log.replaceAll("\\n","<br/>").replaceAll(" ","&nbsp;"))%>
+                        <td><%=Encode.forHtml(log)%>
                         </td>
                     </tr>
                     <%

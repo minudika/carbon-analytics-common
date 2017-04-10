@@ -93,18 +93,17 @@ public class BlockingEventQueue implements Serializable {
                 notEmpty.await();
             }
             wrappedEvent = this.queue.take();
-            c = currentSize.addAndGet(-wrappedEvent.getSize());
+            c = currentSize.getAndAdd(-wrappedEvent.getSize());
 
-            if (c > 0) {
+            if (currentSize.get() > 0) {
                 // if the queue is still not empty, signal that.
                 notEmpty.signal();
             }
         } finally {
             takeLock.unlock();
         }
-
-        if (c < maxSizeInBytes) {
-            // if the queue has not reached the max yet, signal that
+        if (c >= maxSizeInBytes) {
+            // if the queue previously had reached its max, signal that now it's not
             signalNotFull();
         }
         return wrappedEvent.getEvent();
@@ -124,9 +123,9 @@ public class BlockingEventQueue implements Serializable {
             if (currentSize.get() > 0) {
                 wrappedEvent = this.queue.poll();
                 if (wrappedEvent != null) {
-                    c = currentSize.addAndGet(-wrappedEvent.getSize());
+                    c = currentSize.getAndAdd(-wrappedEvent.getSize());
 
-                    if (c > 0) {
+                    if (currentSize.get() > 0) {
                         // if the queue is still not empty, signal that.
                         notEmpty.signal();
                     }
@@ -135,9 +134,8 @@ public class BlockingEventQueue implements Serializable {
         } finally {
             takeLock.unlock();
         }
-
-        if (c < maxSizeInBytes) {
-            // if the queue has not reached the max yet, signal that
+        if (wrappedEvent != null && c >= maxSizeInBytes) {
+            // if the queue previously had reached its max, signal that now it's not
             signalNotFull();
         }
         return wrappedEvent == null ? null : wrappedEvent.getEvent();

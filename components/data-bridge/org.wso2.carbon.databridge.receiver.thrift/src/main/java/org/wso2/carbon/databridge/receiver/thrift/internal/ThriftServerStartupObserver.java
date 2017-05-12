@@ -50,6 +50,7 @@ public class ThriftServerStartupObserver implements ServerStartupObserver {
                 ServiceHolder.setDataReceiver(new ThriftDataReceiverFactory().createAgentServer(thriftDataReceiverConfiguration, ServiceHolder.getDataBridgeReceiverService()));
                 String serverUrl = CarbonUtils.getServerURL(ServiceHolder.getServerConfiguration(), ServiceHolder.getConfigurationContext().getServerConfigContext());
                 String hostName = thriftDataReceiverConfiguration.getReceiverHostName();
+
                 if (null == hostName) {
                     try {
                         hostName = new URL(serverUrl).getHost();
@@ -60,7 +61,8 @@ public class ThriftServerStartupObserver implements ServerStartupObserver {
                         }
                     }
                 }
-                ServiceHolder.getDataReceiver().start(hostName);
+                ServiceHolder.getDataReceiver().start(hostName, thriftDataReceiverConfiguration
+                        .getWaitingTimeInMilliSeconds());
                 ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor = new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
                         new ThriftEventTransmissionServiceImpl(ServiceHolder.getDataBridgeReceiverService()));
                 TCompactProtocol.Factory inProtFactory = new TCompactProtocol.Factory();

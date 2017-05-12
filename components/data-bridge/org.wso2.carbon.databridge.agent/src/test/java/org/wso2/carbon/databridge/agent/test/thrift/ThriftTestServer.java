@@ -124,7 +124,6 @@ public class ThriftTestServer {
             public void receive(List<Event> eventList, Credentials credentials) {
                 numberOfEventsReceived.addAndGet(eventList.size());
                 log.info("Received events : " + numberOfEventsReceived);
-//                log.info("eventListSize=" + eventList.size() + " eventList " + eventList + " for username " + credentials.getUsername());
             }
 
         });

@@ -63,10 +63,6 @@ public class BlockingEventQueue implements Serializable {
             this.queue.put(new WrappedEvent(this.currentEventSize, event));
             c = currentSize.getAndAdd(this.currentEventSize);
 
-            if (c + currentEventSize < maxSizeInBytes) {
-                // if the queue is still not reached the max size, signal it
-                notFull.signal();
-            }
         } finally {
             putLock.unlock();
         }
@@ -95,10 +91,6 @@ public class BlockingEventQueue implements Serializable {
             wrappedEvent = this.queue.take();
             c = currentSize.getAndAdd(-wrappedEvent.getSize());
 
-            if (currentSize.get() > 0) {
-                // if the queue is still not empty, signal that.
-                notEmpty.signal();
-            }
         } finally {
             takeLock.unlock();
         }

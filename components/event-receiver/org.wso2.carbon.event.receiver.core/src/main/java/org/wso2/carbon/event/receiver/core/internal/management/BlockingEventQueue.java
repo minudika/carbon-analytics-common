@@ -30,6 +30,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * This implementation is mostly referenced from the Java LinkedBlockingQueue implementation http://grepcode
+ * .com/file/repository.grepcode.com/java/root/jdk/openjdk/8u40-b25/java/util/concurrent/LinkedBlockingQueue.java
+ */
 public class BlockingEventQueue implements Serializable {
     private static final Log log = LogFactory.getLog(BlockingEventQueue.class);
     private final ReentrantLock takeLock = new ReentrantLock();

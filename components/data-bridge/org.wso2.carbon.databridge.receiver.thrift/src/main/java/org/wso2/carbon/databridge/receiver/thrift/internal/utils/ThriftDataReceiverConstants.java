@@ -37,4 +37,10 @@ public final class ThriftDataReceiverConstants {
     public static final String DATA_BRIDGE_RECEIVER_NAME = "Thrift";
     public static final String DATA_BRIDGE_KEY_STORE_LOCATION = "keyStoreLocation";
     public static final String DATA_BRIDGE_KEY_STORE_PASSWORD = "keyStorePassword";
+    public static final String THRIFT_MAX_WORKER_THREADS = "maxWorkerThreads";
+    public static final String THRIFT_MIN_WORKER_THREADS = "minWorkerThreads";
+    public static final String THRIFT_REQUEST_TIMEOUT = "requestTimeout";
+    public static final String THRIFT_STOP_TIMEOUT_VAL = "stopTimeoutVal";
+
+    public static final int THRIFT_DEFAULT_MAX_WORKER_THREADS = 20;
 }

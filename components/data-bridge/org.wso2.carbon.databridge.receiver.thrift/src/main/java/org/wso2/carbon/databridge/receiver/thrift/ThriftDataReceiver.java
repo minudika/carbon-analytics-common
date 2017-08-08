@@ -1,16 +1,15 @@
 /**
- *
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +25,11 @@ import org.apache.thrift.server.ServerContext;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TServerEventHandler;
 import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.*;
+import org.apache.thrift.transport.TSSLTransportFactory;
+import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.thrift.service.general.ThriftEventTransmissionService;
@@ -39,10 +42,10 @@ import org.wso2.carbon.databridge.receiver.thrift.conf.ThriftDataReceiverConfigu
 import org.wso2.carbon.databridge.receiver.thrift.service.ThriftEventTransmissionServiceImpl;
 import org.wso2.carbon.databridge.receiver.thrift.service.ThriftSecureEventTransmissionServiceImpl;
 
-import javax.net.ssl.SSLServerSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import javax.net.ssl.SSLServerSocket;
 
 /**
  * Carbon based implementation of the agent server
@@ -200,8 +203,18 @@ public class ThriftDataReceiver {
             ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor =
                     new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
                             new ThriftEventTransmissionServiceImpl(dataBridgeReceiverService));
-            dataReceiverServer = new TThreadPoolServer(
-                    new TThreadPoolServer.Args(serverTransport).processor(processor));
+            TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
+                    .maxWorkerThreads(thriftDataReceiverConfiguration.getMaxWorkerThreads());
+            if (thriftDataReceiverConfiguration.getMinWorkerThreads() != -1) {
+                args.minWorkerThreads = thriftDataReceiverConfiguration.getMinWorkerThreads();
+            }
+            if (thriftDataReceiverConfiguration.getRequestTimeout() != -1) {
+                args.requestTimeout = thriftDataReceiverConfiguration.getRequestTimeout();
+            }
+            if (thriftDataReceiverConfiguration.getStopTimeoutVal() != -1) {
+                args.stopTimeoutVal = thriftDataReceiverConfiguration.getStopTimeoutVal();
+            }
+            dataReceiverServer = new TThreadPoolServer(args);
             String url = hostName + ":" + port;
             Thread thread = new Thread(new ServerThread(dataReceiverServer, receiverStartupWaitingTime, url));
             log.info("Thrift port : " + port);

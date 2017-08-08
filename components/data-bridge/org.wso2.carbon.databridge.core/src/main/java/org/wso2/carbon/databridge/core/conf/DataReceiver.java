@@ -17,9 +17,9 @@
 */
 package org.wso2.carbon.databridge.core.conf;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import java.util.List;
 
 public class DataReceiver {
     private String name;
@@ -43,9 +43,10 @@ public class DataReceiver {
         this.configurations = configurations;
     }
 
-    public Object getConfiguration(String configName, Object defaultValue){
-        for (Configuration configuration: configurations){
-            if (configuration.getName().equalsIgnoreCase(configName)){
+    public Object getConfiguration(String configName, Object defaultValue) {
+        for (Configuration configuration : configurations) {
+            if (configuration.getName().equalsIgnoreCase(configName) && configuration.getValue() != null
+                    && !configuration.getValue().isEmpty()) {
                 return configuration.getValue();
             }
         }

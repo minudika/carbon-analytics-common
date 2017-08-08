@@ -1,16 +1,15 @@
 /**
- *
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +34,10 @@ public class ThriftDataReceiverConfiguration {
     private String ciphers;
     private String receiverHostName;
     private int waitingTimeInMilliSeconds;
+    private int maxWorkerThreads;
+    private int minWorkerThreads;
+    private int requestTimeout;
+    private int stopTimeoutVal;
 
     public ThriftDataReceiverConfiguration(int defaultSslPort, int defaultPort) {
         secureDataReceiverPort = defaultSslPort;
@@ -59,6 +62,11 @@ public class ThriftDataReceiverConfiguration {
         Object ciphersObj = dataReceiver.getConfiguration(ThriftDataReceiverConstants.CIPHERS_ELEMENT, null);
         ciphers =  sslProtocolObj != null ? ciphersObj.toString() : null;
 
+        maxWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_MAX_WORKER_THREADS,
+                ThriftDataReceiverConstants.THRIFT_DEFAULT_MAX_WORKER_THREADS).toString());
+        minWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_MIN_WORKER_THREADS, -1).toString());
+        requestTimeout = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_REQUEST_TIMEOUT, -1).toString());
+        stopTimeoutVal = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_STOP_TIMEOUT_VAL, -1).toString());
 
     }
 
@@ -117,5 +125,37 @@ public class ThriftDataReceiverConfiguration {
 
     public void setCiphers(String ciphers) {
         this.ciphers = ciphers;
+    }
+
+    public int getMaxWorkerThreads() {
+        return maxWorkerThreads;
+    }
+
+    public void setMaxWorkerThreads(int maxWorkerThreads) {
+        this.maxWorkerThreads = maxWorkerThreads;
+    }
+
+    public int getMinWorkerThreads() {
+        return minWorkerThreads;
+    }
+
+    public void setMinWorkerThreads(int minWorkerThreads) {
+        this.minWorkerThreads = minWorkerThreads;
+    }
+
+    public int getRequestTimeout() {
+        return requestTimeout;
+    }
+
+    public void setRequestTimeout(int requestTimeout) {
+        this.requestTimeout = requestTimeout;
+    }
+
+    public int getStopTimeoutVal() {
+        return stopTimeoutVal;
+    }
+
+    public void setStopTimeoutVal(int stopTimeoutVal) {
+        this.stopTimeoutVal = stopTimeoutVal;
     }
 }

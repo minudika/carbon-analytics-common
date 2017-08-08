@@ -182,8 +182,18 @@ public class ThriftDataReceiver {
         ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> processor =
                 new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
                         new ThriftSecureEventTransmissionServiceImpl(dataBridgeReceiverService));
-        authenticationServer = new TThreadPoolServer(
-                new TThreadPoolServer.Args(serverTransport).processor(processor));
+        TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
+                .maxWorkerThreads(thriftDataReceiverConfiguration.getMaxWorkerThreads());
+        if (thriftDataReceiverConfiguration.getMinWorkerThreads() != -1) {
+            args.minWorkerThreads = thriftDataReceiverConfiguration.getMinWorkerThreads();
+        }
+        if (thriftDataReceiverConfiguration.getRequestTimeout() != -1) {
+            args.requestTimeout = thriftDataReceiverConfiguration.getRequestTimeout();
+        }
+        if (thriftDataReceiverConfiguration.getStopTimeoutVal() != -1) {
+            args.stopTimeoutVal = thriftDataReceiverConfiguration.getStopTimeoutVal();
+        }
+        authenticationServer = new TThreadPoolServer(args);
 
         if (log.isDebugEnabled()) {
             authenticationServer.setServerEventHandler(new LoggingServerEventHandler());

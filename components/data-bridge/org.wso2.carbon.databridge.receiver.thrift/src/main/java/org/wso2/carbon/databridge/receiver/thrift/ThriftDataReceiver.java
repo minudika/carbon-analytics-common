@@ -39,6 +39,7 @@ import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.internal.utils.DataBridgeConstants;
 import org.wso2.carbon.databridge.receiver.thrift.conf.ThriftDataReceiverConfiguration;
+import org.wso2.carbon.databridge.receiver.thrift.internal.utils.ThriftDataReceiverConstants;
 import org.wso2.carbon.databridge.receiver.thrift.service.ThriftEventTransmissionServiceImpl;
 import org.wso2.carbon.databridge.receiver.thrift.service.ThriftSecureEventTransmissionServiceImpl;
 
@@ -184,13 +185,13 @@ public class ThriftDataReceiver {
                         new ThriftSecureEventTransmissionServiceImpl(dataBridgeReceiverService));
         TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
                 .maxWorkerThreads(thriftDataReceiverConfiguration.getSslMaxWorkerThreads());
-        if (thriftDataReceiverConfiguration.getSslMinWorkerThreads() != -1) {
+        if (thriftDataReceiverConfiguration.getSslMinWorkerThreads() != ThriftDataReceiverConstants.UNDEFINED) {
             args.minWorkerThreads = thriftDataReceiverConfiguration.getSslMinWorkerThreads();
         }
-        if (thriftDataReceiverConfiguration.getSslRequestTimeout() != -1) {
+        if (thriftDataReceiverConfiguration.getSslRequestTimeout() != ThriftDataReceiverConstants.UNDEFINED) {
             args.requestTimeout = thriftDataReceiverConfiguration.getSslRequestTimeout();
         }
-        if (thriftDataReceiverConfiguration.getSslStopTimeoutVal() != -1) {
+        if (thriftDataReceiverConfiguration.getSslStopTimeoutVal() != ThriftDataReceiverConstants.UNDEFINED) {
             args.stopTimeoutVal = thriftDataReceiverConfiguration.getSslStopTimeoutVal();
         }
         authenticationServer = new TThreadPoolServer(args);
@@ -215,13 +216,13 @@ public class ThriftDataReceiver {
                             new ThriftEventTransmissionServiceImpl(dataBridgeReceiverService));
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
                     .maxWorkerThreads(thriftDataReceiverConfiguration.getTcpMaxWorkerThreads());
-            if (thriftDataReceiverConfiguration.getTcpMinWorkerThreads() != -1) {
+            if (thriftDataReceiverConfiguration.getTcpMinWorkerThreads() != ThriftDataReceiverConstants.UNDEFINED) {
                 args.minWorkerThreads = thriftDataReceiverConfiguration.getTcpMinWorkerThreads();
             }
-            if (thriftDataReceiverConfiguration.getTcpRequestTimeout() != -1) {
+            if (thriftDataReceiverConfiguration.getTcpRequestTimeout() != ThriftDataReceiverConstants.UNDEFINED) {
                 args.requestTimeout = thriftDataReceiverConfiguration.getTcpRequestTimeout();
             }
-            if (thriftDataReceiverConfiguration.getTcpStopTimeoutVal() != -1) {
+            if (thriftDataReceiverConfiguration.getTcpStopTimeoutVal() != ThriftDataReceiverConstants.UNDEFINED) {
                 args.stopTimeoutVal = thriftDataReceiverConfiguration.getTcpStopTimeoutVal();
             }
             dataReceiverServer = new TThreadPoolServer(args);

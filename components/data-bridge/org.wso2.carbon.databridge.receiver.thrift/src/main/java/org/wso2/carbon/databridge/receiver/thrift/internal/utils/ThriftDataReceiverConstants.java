@@ -50,4 +50,6 @@ public final class ThriftDataReceiverConstants {
 
     public static final int THRIFT_TCP_DEFAULT_MAX_WORKER_THREADS = 20;
     public static final int THRIFT_SSL_DEFAULT_MAX_WORKER_THREADS = 20;
+
+    public static final int UNDEFINED = -1;
 }

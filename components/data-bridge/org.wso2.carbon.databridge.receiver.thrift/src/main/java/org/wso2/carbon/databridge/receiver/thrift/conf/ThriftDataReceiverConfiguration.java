@@ -34,14 +34,14 @@ public class ThriftDataReceiverConfiguration {
     private String ciphers;
     private String receiverHostName;
     private int waitingTimeInMilliSeconds;
-    private int tcpMaxWorkerThreads;
-    private int tcpMinWorkerThreads;
-    private int tcpRequestTimeout;
-    private int tcpStopTimeoutVal;
-    private int sslMaxWorkerThreads;
-    private int sslMinWorkerThreads;
-    private int sslRequestTimeout;
-    private int sslStopTimeoutVal;
+    private int tcpMaxWorkerThreads = ThriftDataReceiverConstants.THRIFT_TCP_DEFAULT_MAX_WORKER_THREADS;
+    private int tcpMinWorkerThreads = ThriftDataReceiverConstants.UNDEFINED;
+    private int tcpRequestTimeout = ThriftDataReceiverConstants.UNDEFINED;
+    private int tcpStopTimeoutVal = ThriftDataReceiverConstants.UNDEFINED;
+    private int sslMaxWorkerThreads = ThriftDataReceiverConstants.THRIFT_SSL_DEFAULT_MAX_WORKER_THREADS;
+    private int sslMinWorkerThreads = ThriftDataReceiverConstants.UNDEFINED;
+    private int sslRequestTimeout = ThriftDataReceiverConstants.UNDEFINED;
+    private int sslStopTimeoutVal = ThriftDataReceiverConstants.UNDEFINED;
 
     public ThriftDataReceiverConfiguration(int defaultSslPort, int defaultPort) {
         secureDataReceiverPort = defaultSslPort;
@@ -66,17 +66,23 @@ public class ThriftDataReceiverConfiguration {
         Object ciphersObj = dataReceiver.getConfiguration(ThriftDataReceiverConstants.CIPHERS_ELEMENT, null);
         ciphers =  sslProtocolObj != null ? ciphersObj.toString() : null;
 
-        tcpMaxWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_TCP_MAX_WORKER_THREADS,
-                ThriftDataReceiverConstants.THRIFT_TCP_DEFAULT_MAX_WORKER_THREADS).toString());
-        tcpMinWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_TCP_MIN_WORKER_THREADS, -1).toString());
-        tcpRequestTimeout = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_TCP_REQUEST_TIMEOUT, -1).toString());
-        tcpStopTimeoutVal = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_TCP_STOP_TIMEOUT_VAL, -1).toString());
+        tcpMaxWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_TCP_MAX_WORKER_THREADS, tcpMaxWorkerThreads).toString());
+        tcpMinWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_TCP_MIN_WORKER_THREADS, tcpMinWorkerThreads).toString());
+        tcpRequestTimeout = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_TCP_REQUEST_TIMEOUT, tcpRequestTimeout).toString());
+        tcpStopTimeoutVal = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_TCP_STOP_TIMEOUT_VAL, tcpStopTimeoutVal).toString());
 
-        sslMaxWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_SSL_MAX_WORKER_THREADS,
-                ThriftDataReceiverConstants.THRIFT_SSL_DEFAULT_MAX_WORKER_THREADS).toString());
-        sslMinWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_SSL_MIN_WORKER_THREADS, -1).toString());
-        sslRequestTimeout = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_SSL_REQUEST_TIMEOUT, -1).toString());
-        sslStopTimeoutVal = Integer.parseInt(dataReceiver.getConfiguration(ThriftDataReceiverConstants.THRIFT_SSL_STOP_TIMEOUT_VAL, -1).toString());
+        sslMaxWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_SSL_MAX_WORKER_THREADS, sslMaxWorkerThreads).toString());
+        sslMinWorkerThreads = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_SSL_MIN_WORKER_THREADS, sslMinWorkerThreads).toString());
+        sslRequestTimeout = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_SSL_REQUEST_TIMEOUT, sslRequestTimeout).toString());
+        sslStopTimeoutVal = Integer.parseInt(dataReceiver.getConfiguration(
+                ThriftDataReceiverConstants.THRIFT_SSL_STOP_TIMEOUT_VAL, sslStopTimeoutVal).toString());
     }
 
     public ThriftDataReceiverConfiguration(int defaultSslPort, int defaultPort,

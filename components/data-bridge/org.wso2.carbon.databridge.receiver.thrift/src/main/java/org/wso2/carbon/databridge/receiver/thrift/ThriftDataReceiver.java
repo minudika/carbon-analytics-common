@@ -182,8 +182,18 @@ public class ThriftDataReceiver {
         ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> processor =
                 new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
                         new ThriftSecureEventTransmissionServiceImpl(dataBridgeReceiverService));
-        authenticationServer = new TThreadPoolServer(
-                new TThreadPoolServer.Args(serverTransport).processor(processor));
+        TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
+                .maxWorkerThreads(thriftDataReceiverConfiguration.getSslMaxWorkerThreads());
+        if (thriftDataReceiverConfiguration.getSslMinWorkerThreads() != -1) {
+            args.minWorkerThreads = thriftDataReceiverConfiguration.getSslMinWorkerThreads();
+        }
+        if (thriftDataReceiverConfiguration.getSslRequestTimeout() != -1) {
+            args.requestTimeout = thriftDataReceiverConfiguration.getSslRequestTimeout();
+        }
+        if (thriftDataReceiverConfiguration.getSslStopTimeoutVal() != -1) {
+            args.stopTimeoutVal = thriftDataReceiverConfiguration.getSslStopTimeoutVal();
+        }
+        authenticationServer = new TThreadPoolServer(args);
 
         if (log.isDebugEnabled()) {
             authenticationServer.setServerEventHandler(new LoggingServerEventHandler());
@@ -204,15 +214,15 @@ public class ThriftDataReceiver {
                     new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
                             new ThriftEventTransmissionServiceImpl(dataBridgeReceiverService));
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport).processor(processor)
-                    .maxWorkerThreads(thriftDataReceiverConfiguration.getMaxWorkerThreads());
-            if (thriftDataReceiverConfiguration.getMinWorkerThreads() != -1) {
-                args.minWorkerThreads = thriftDataReceiverConfiguration.getMinWorkerThreads();
+                    .maxWorkerThreads(thriftDataReceiverConfiguration.getTcpMaxWorkerThreads());
+            if (thriftDataReceiverConfiguration.getTcpMinWorkerThreads() != -1) {
+                args.minWorkerThreads = thriftDataReceiverConfiguration.getTcpMinWorkerThreads();
             }
-            if (thriftDataReceiverConfiguration.getRequestTimeout() != -1) {
-                args.requestTimeout = thriftDataReceiverConfiguration.getRequestTimeout();
+            if (thriftDataReceiverConfiguration.getTcpRequestTimeout() != -1) {
+                args.requestTimeout = thriftDataReceiverConfiguration.getTcpRequestTimeout();
             }
-            if (thriftDataReceiverConfiguration.getStopTimeoutVal() != -1) {
-                args.stopTimeoutVal = thriftDataReceiverConfiguration.getStopTimeoutVal();
+            if (thriftDataReceiverConfiguration.getTcpStopTimeoutVal() != -1) {
+                args.stopTimeoutVal = thriftDataReceiverConfiguration.getTcpStopTimeoutVal();
             }
             dataReceiverServer = new TThreadPoolServer(args);
             String url = hostName + ":" + port;

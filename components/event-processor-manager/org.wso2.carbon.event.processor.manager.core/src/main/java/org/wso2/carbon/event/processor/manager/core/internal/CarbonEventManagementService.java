@@ -157,7 +157,7 @@ public class CarbonEventManagementService implements EventManagementService {
                 }
             }
 
-            if(! validateHostName(haConfiguration.getLocalPresenterConfig().getHostName())){
+            if(isPresenterNode && (! validateHostName(haConfiguration.getLocalPresenterConfig().getHostName()))){
                 log.error("Hostname : "+ haConfiguration.getLocalPresenterConfig().getHostName() +" defined for " +
                         "presentation purpose is invalid. Please add proper IP address of the " +
                         "node. This IP address is used by other nodes in the cluster to communicate.");

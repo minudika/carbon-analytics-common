@@ -700,6 +700,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         if (executionInfo != null) {
             executionInfo.setTableExist(false);
         }
+        scheduler.shutdown();
     }
 
     @Override
@@ -711,7 +712,6 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         if (dataSource != null) {
             dataSource = null;
         }
-        scheduler.shutdown();
     }
 
     @Override

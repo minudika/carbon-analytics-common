@@ -136,7 +136,9 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         } finally {
             cleanupConnections(null, con);
         }
-        startScheduler();
+        if (isBatchInsertionEnabled) {
+            startScheduler();
+        }
     }
 
     @Override

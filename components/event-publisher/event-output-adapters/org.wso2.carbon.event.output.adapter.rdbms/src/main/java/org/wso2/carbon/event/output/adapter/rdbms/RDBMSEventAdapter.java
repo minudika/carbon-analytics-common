@@ -19,7 +19,6 @@
 package org.wso2.carbon.event.output.adapter.rdbms;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,9 +43,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
 /**
  * Class will Insert or Update/Insert values to selected RDBMS
@@ -70,7 +67,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
     private final String BATCH_SIZE = "batchSize";
     private final String TIME_INTERVAL = "timeInterval";
     private String tableName;
-    private AtomicBoolean handOvertoScheduler = new AtomicBoolean(false);
+    private Semaphore semaphore;
 
 
     public RDBMSEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration,
@@ -78,6 +75,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         this.eventAdapterConfiguration = eventAdapterConfiguration;
         this.globalProperties = globalProperties;
         this.events = new ConcurrentLinkedQueue<>();
+        this.semaphore = new Semaphore(1);
     }
 
     @Override
@@ -333,12 +331,14 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
             throws OutputEventAdapterException {
 
         createTableIfNotExist(tableName);
-        if (isUpdate) {
-            synchronized (this) {
+        try {
+            semaphore.acquire();
+            if (batch.size() > 0) {
                 executeDbActions(batch);
             }
-        } else {
-            executeDbActions(batch);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            log.error("Failed to acquire lock for writing into database.");
         }
     }
 

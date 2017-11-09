@@ -70,10 +70,8 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
     private final String BATCH_SIZE = "batchSize";
     private final String TIME_INTERVAL = "timeInterval";
     private String tableName;
-    AtomicBoolean handOvertoScheduler = new AtomicBoolean(false);
-    private ReentrantLock lock = new ReentrantLock();
-    private long startTimestamp;
-    private long endTimestamp;
+    private AtomicBoolean handOvertoScheduler = new AtomicBoolean(false);
+
 
     public RDBMSEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration,
                              Map<String, String> globalProperties) {
@@ -138,7 +136,6 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         } finally {
             cleanupConnections(null, con);
         }
-        //startTimestamp = System.currentTimeMillis();
         startScheduler();
     }
 
@@ -159,16 +156,10 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
                 if (!isBatchInsertionEnabled) {
                     executeProcessActions(message, tableName);
                 } else {
-                    //lock.lock();
                     events.offer(message);
-                    //lock.unlock();
                     if (events.size() >= batchSize) {
-                        //lock.lock();
                         handOvertoScheduler.set(false);
                         executeProcessActions(events, tableName);
-                        //startTimestamp = System.currentTimeMillis();
-                        //events.clear();
-                        //lock.unlock();
                     } else {
                         handOvertoScheduler.set(true);
                     }
@@ -394,13 +385,15 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
 
     public void executeDbActions(ConcurrentLinkedQueue<Object> events) throws OutputEventAdapterException {
 
-        PreparedStatement stmt = null;
-        Connection con = null;
+        PreparedStatement stmt;
+        PreparedStatement updateStmt;
+        Connection con;
 
         try {
             con = dataSource.getConnection();
             con.setAutoCommit(false);
             stmt = con.prepareStatement(executionInfo.getPreparedInsertStatement());
+
         } catch (SQLException e) {
             throw new ConnectionUnavailableException(e);
         }
@@ -412,19 +405,27 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         try {
             if (executionInfo.isUpdateMode()) {
                 while ((message = events.poll()) != null) {
+                    updateStmt = con.prepareStatement(executionInfo.getPreparedUpdateStatement());
                     Map<String, Object> map = (Map<String, Object>) message;
                     event = message;
-                    populateStatement(map, stmt, executionInfo.getUpdateQueryColumnOrder());
-                    int updatedRows = stmt.executeUpdate();
+                    populateStatement(map, updateStmt, executionInfo.getUpdateQueryColumnOrder());
+                    int updatedRows = updateStmt.executeUpdate();
                     con.commit();
-                    stmt.close();
+                    updateStmt.close();
                     if (updatedRows > 0) {
                         executeInsert = false;
                     }
-                }
-            }
 
-            if (executeInsert) {
+                    if (executeInsert) {
+                        populateStatement(map, stmt, executionInfo.getInsertQueryColumnOrder());
+                        stmt.addBatch();
+                    }
+                }
+                if (executeInsert && stmt != null) {
+                    stmt.executeBatch();
+                    con.commit();
+                }
+            } else {
                 while ((message = events.poll()) != null) {
                     Map<String, Object> map = (Map<String, Object>) message;
                     event = message;
@@ -706,6 +707,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         if (dataSource != null) {
             dataSource = null;
         }
+        scheduler.shutdown();
     }
 
     @Override
@@ -718,11 +720,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
             public void run() {
                 if (handOvertoScheduler.get() && events.size() > 0) {
                     try {
-                        log.info("scheduler hit!");
-                        //lock.lock();
                         executeProcessActions(events, tableName);
-                        //events.clear();
-                        //lock.unlock();
                     } catch (OutputEventAdapterException e) {
                         log.error(e.getMessage() + " Hence Event is dropped.", e);
                     }

@@ -158,10 +158,7 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
                 } else {
                     events.offer(message);
                     if (events.size() >= batchSize) {
-                        handOvertoScheduler.set(false);
-                        executeProcessActions(events, tableName);
-                    } else {
-                        handOvertoScheduler.set(true);
+                        executeBatchProcessActions((ConcurrentLinkedQueue)events, tableName);
                     }
                 }
             } else {
@@ -323,18 +320,23 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
         createTableIfNotExist(tableName);
         if (isUpdate) {
             synchronized (this) {
-                if (message instanceof Queue) {
-                    executeDbActions((ConcurrentLinkedQueue)message);
-                } else {
-                    executeDbActions(message);
-                }
-            }
-        } else {
-            if (message instanceof Queue) {
-                executeDbActions((ConcurrentLinkedQueue)message);
-            } else {
                 executeDbActions(message);
             }
+        } else {
+            executeDbActions(message);
+        }
+    }
+
+    public void executeBatchProcessActions(ConcurrentLinkedQueue batch, String tableName)
+            throws OutputEventAdapterException {
+
+        createTableIfNotExist(tableName);
+        if (isUpdate) {
+            synchronized (this) {
+                executeDbActions(batch);
+            }
+        } else {
+            executeDbActions(batch);
         }
     }
 
@@ -718,9 +720,9 @@ public class RDBMSEventAdapter implements OutputEventAdapter {
     public void startScheduler() {
         final Runnable writer = new Runnable() {
             public void run() {
-                if (handOvertoScheduler.get() && events.size() > 0) {
+                if (events.size() > 0) {
                     try {
-                        executeProcessActions(events, tableName);
+                        executeBatchProcessActions((ConcurrentLinkedQueue)events, tableName);
                     } catch (OutputEventAdapterException e) {
                         log.error(e.getMessage() + " Hence Event is dropped.", e);
                     }

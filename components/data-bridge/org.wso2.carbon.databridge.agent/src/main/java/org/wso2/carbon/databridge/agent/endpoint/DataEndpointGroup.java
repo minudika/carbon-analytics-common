@@ -34,7 +34,10 @@ import org.wso2.carbon.databridge.agent.util.DataPublisherUtil;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeThreadFactory;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -85,6 +88,15 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
         this.publishingStrategy = agent.getAgentConfiguration().getPublishingStrategy();
         if (!publishingStrategy.equalsIgnoreCase(DataEndpointConstants.SYNC_STRATEGY)) {
             this.eventQueue = new EventQueue(agent.getAgentConfiguration().getQueueSize());
+            MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
+            try {
+                ObjectName mbeanEventQueue = new ObjectName("org.wso2.carbon.databridge.agent.endpoint:type=EventQueue");
+                if (!platformMBeanServer.isRegistered(mbeanEventQueue)) {
+                    platformMBeanServer.registerMBean(this.eventQueue, mbeanEventQueue);
+                }
+            } catch (Exception e) {
+                log.error("Unable to create EventQueue stat MXBean: " + e.getMessage(), e);
+            }
         }
         this.reconnectionService.scheduleAtFixedRate(new ReconnectionTask(), reconnectionInterval,
                 reconnectionInterval, TimeUnit.SECONDS);
@@ -173,7 +185,7 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
         }
     }
 
-    class EventQueue {
+    class EventQueue implements EventQueueMXBean {
         private RingBuffer<WrappedEventFactory.WrappedEvent> ringBuffer = null;
         private Disruptor<WrappedEventFactory.WrappedEvent> eventQueueDisruptor = null;
         private ExecutorService eventQueuePool = null;
@@ -241,6 +253,24 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
         private void shutdown() {
             eventQueuePool.shutdown();
             eventQueueDisruptor.shutdown();
+        }
+
+        @Override
+        public int getRingBufferSize(){
+            if (ringBuffer != null){
+                return ringBuffer.getBufferSize();
+            } else {
+                return 0;
+            }
+        }
+
+        @Override
+        public long getRingBufferRemainingCapacity(){
+            if (ringBuffer != null){
+                return ringBuffer.remainingCapacity();
+            } else {
+                return 0;
+            }
         }
     }
 

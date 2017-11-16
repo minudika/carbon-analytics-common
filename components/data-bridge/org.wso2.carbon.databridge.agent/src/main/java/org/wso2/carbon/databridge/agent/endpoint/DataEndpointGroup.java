@@ -90,12 +90,13 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
             this.eventQueue = new EventQueue(agent.getAgentConfiguration().getQueueSize());
             MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
             try {
-                ObjectName mbeanEventQueue = new ObjectName("org.wso2.carbon.databridge.agent.endpoint:type=EventQueue");
+                ObjectName mbeanEventQueue = new ObjectName("org.wso2.carbon:00=analytics," +
+                        "01=DATABRIDGE_AGENT_EVENT_QUEUE");
                 if (!platformMBeanServer.isRegistered(mbeanEventQueue)) {
                     platformMBeanServer.registerMBean(this.eventQueue, mbeanEventQueue);
                 }
             } catch (Exception e) {
-                log.error("Unable to create EventQueue stat MXBean: " + e.getMessage(), e);
+                log.error("Unable to create DATABRIDGE_AGENT_EVENT_QUEUE stat MXBean: " + e.getMessage(), e);
             }
         }
         this.reconnectionService.scheduleAtFixedRate(new ReconnectionTask(), reconnectionInterval,

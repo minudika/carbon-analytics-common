@@ -91,7 +91,7 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
             MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
             try {
                 ObjectName mbeanEventQueue = new ObjectName("org.wso2.carbon:00=analytics," +
-                        "01=DATABRIDGE_AGENT_EVENT_QUEUE");
+                        "01=DATABRIDGE_AGENT_EVENT_QUEUE " + this.hashCode());
                 if (!platformMBeanServer.isRegistered(mbeanEventQueue)) {
                     platformMBeanServer.registerMBean(this.eventQueue, mbeanEventQueue);
                 }

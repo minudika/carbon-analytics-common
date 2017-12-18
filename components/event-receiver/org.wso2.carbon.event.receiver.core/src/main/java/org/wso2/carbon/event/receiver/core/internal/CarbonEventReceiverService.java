@@ -26,6 +26,7 @@ import org.wso2.carbon.event.input.adapter.core.EventAdapterUtil;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterSchema;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 import org.wso2.carbon.event.input.adapter.core.Property;
+import org.wso2.carbon.event.receiver.core.EventReceiverDeployer;
 import org.wso2.carbon.event.receiver.core.EventReceiverService;
 import org.wso2.carbon.event.receiver.core.config.EventReceiverConfiguration;
 import org.wso2.carbon.event.receiver.core.config.EventReceiverConfigurationFile;
@@ -55,9 +56,12 @@ public class CarbonEventReceiverService implements EventReceiverService {
     private Map<Integer, Map<String, EventReceiver>> tenantSpecificEventReceiverConfigurationMap;
     private Map<Integer, List<EventReceiverConfigurationFile>> tenantSpecificEventReceiverConfigurationFileMap;
 
+    private Map<Integer, EventReceiverDeployer> tenantSpecificDeployerMap;
+
     public CarbonEventReceiverService() {
         tenantSpecificEventReceiverConfigurationMap = new ConcurrentHashMap<Integer, Map<String, EventReceiver>>();
         tenantSpecificEventReceiverConfigurationFileMap = new ConcurrentHashMap<Integer, List<EventReceiverConfigurationFile>>();
+        tenantSpecificDeployerMap = new ConcurrentHashMap<Integer, EventReceiverDeployer>();
     }
 
     @Override
@@ -387,7 +391,7 @@ public class CarbonEventReceiverService implements EventReceiverService {
         }
         for (EventReceiverConfigurationFile receiverConfigurationFile : fileList) {
             try {
-                EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile);
+                EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile, tenantSpecificDeployerMap);
             } catch (Exception e) {
                 log.error("Exception occurred while trying to deploy the Event Receiver configuration file: " + receiverConfigurationFile.getFileName(), e);
             }
@@ -412,7 +416,7 @@ public class CarbonEventReceiverService implements EventReceiverService {
         }
         for (EventReceiverConfigurationFile receiverConfigurationFile : fileList) {
             try {
-                EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile);
+                EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile, tenantSpecificDeployerMap);
             } catch (Exception e) {
                 log.error("Exception occurred while trying to deploy the Event Receiver configuration file: " + receiverConfigurationFile.getFileName(), e);
             }
@@ -445,7 +449,7 @@ public class CarbonEventReceiverService implements EventReceiverService {
         }
 
         for (EventReceiverConfigurationFile receiverConfigurationFile : fileList) {
-            EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile);
+            EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile, tenantSpecificDeployerMap);
             log.info("Event receiver : " + receiverConfigurationFile.getEventReceiverName() + " in inactive state because dependency could not be found: " + dependency);
         }
     }
@@ -474,7 +478,7 @@ public class CarbonEventReceiverService implements EventReceiverService {
             }
         }
         for (EventReceiverConfigurationFile receiverConfigurationFile : fileList) {
-            EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile);
+            EventReceiverConfigurationFileSystemInvoker.reload(receiverConfigurationFile, tenantSpecificDeployerMap);
             log.info("Event receiver : " + receiverConfigurationFile.getEventReceiverName() + " in inactive state because event stream dependency  could not be found: " + streamId);
         }
     }
@@ -632,4 +636,9 @@ public class CarbonEventReceiverService implements EventReceiverService {
     public void startPolling() {
         EventReceiverServiceValueHolder.getInputEventAdapterService().startPolling();
     }
+
+	public Map<Integer, EventReceiverDeployer> getTenantSpecificDeployerMap() {
+		return tenantSpecificDeployerMap;
+	}
+
 }

@@ -48,7 +48,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.event.input.adapter.http.server</id>
+                            <id>org.wso2.carbon.event.input.adapter.sqs.server</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>

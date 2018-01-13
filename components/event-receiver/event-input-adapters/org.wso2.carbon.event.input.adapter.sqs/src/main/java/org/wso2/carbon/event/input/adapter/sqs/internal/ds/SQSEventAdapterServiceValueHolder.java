@@ -39,7 +39,6 @@ public final class SQSEventAdapterServiceValueHolder {
 
     public static void registerHTTPService(
             HttpService httpService) {
-        SQSEventAdapterServiceValueHolder.httpService = httpService;
     }
 
     public static HttpService getHTTPService() {

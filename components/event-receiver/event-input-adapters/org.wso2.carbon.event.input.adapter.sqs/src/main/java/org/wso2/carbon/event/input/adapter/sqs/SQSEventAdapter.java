@@ -50,13 +50,25 @@ public final class SQSEventAdapter implements InputEventAdapter {
     private boolean isConnected = false;
     private AmazonSQS sqs;
 
-    private SQSProvider sqsProvider;
-
     private int minThreadPoolSize;
     private int maxThreadPoolSize;
     private long keepAliveTimeInMillis;
     private int jobQueueSize;
     private int waitingTime = 0;
+
+    private String accessKey;
+    private String secretKey;
+    private String serviceEndPoint;
+    private String signingRegion;
+    private int waitTime;
+    private int pollingInterval;
+    private int maxNumberOfMessages;
+    private String queueURL;
+    private int visibilityTimeout;
+
+    private SQSConfig sqsConfigs;
+
+    private SQSProvider sqsProvider;
 
     public SQSEventAdapter(InputEventAdapterConfiguration eventAdapterConfiguration,
                            Map<String, String> globalProperties) {
@@ -99,6 +111,35 @@ public final class SQSEventAdapter implements InputEventAdapter {
                 jobQueueSize = SQSEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE;
             }
 
+            Map adapterProperties = eventAdapterConfiguration.getProperties();
+
+            accessKey = adapterProperties.get(SQSEventAdapterConstants.ACCESS_KEY).toString();
+            secretKey = adapterProperties.get(SQSEventAdapterConstants.SECRET_KEY).toString();
+            serviceEndPoint = adapterProperties.get(SQSEventAdapterConstants.SERVICE_ENDPOINT).toString();
+            signingRegion = adapterProperties.get(SQSEventAdapterConstants.SIGNING_REGION).toString();
+            queueURL = adapterProperties.get(SQSEventAdapterConstants.QUEUE_URL).toString();
+
+            waitTime = adapterProperties.get(SQSEventAdapterConstants.WAIT_TIME_NAME) != null ?
+                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.WAIT_TIME_NAME).toString()) :
+                    SQSEventAdapterConstants.WAIT_TIME;
+
+            pollingInterval = adapterProperties.get(SQSEventAdapterConstants.POLLING_INTERVAL_NAME) != null ?
+                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.POLLING_INTERVAL_NAME).toString()) :
+                    SQSEventAdapterConstants.POLLING_INTERVAL;
+
+            maxNumberOfMessages = adapterProperties.get(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME) != null ?
+                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME).toString()) :
+                    SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS;
+
+            visibilityTimeout = adapterProperties.get(SQSEventAdapterConstants.VISIBILITY_TIMEOUT_NAME) != null ?
+                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.VISIBILITY_TIMEOUT_NAME).toString()) :
+                    SQSEventAdapterConstants.VISIBILITY_TIMEOUT;
+
+            sqsConfigs = new SQSConfig(accessKey, secretKey, queueURL, pollingInterval, waitTime, maxNumberOfMessages,
+                    serviceEndPoint, signingRegion, visibilityTimeout);
+
+
+
             RejectedExecutionHandler rejectedExecutionHandler = new RejectedExecutionHandler() {
                 @Override
                 public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -112,7 +153,7 @@ public final class SQSEventAdapter implements InputEventAdapter {
             };
 
             executorService = Executors.newScheduledThreadPool(minThreadPoolSize);
-            sqsProvider = new SQSProvider(eventAdapterConfiguration, eventAdaptorListener);
+            sqsProvider = new SQSProvider(sqsConfigs, eventAdaptorListener);
 
             /*executorService = new ThreadPoolExecutor(minThreadPoolSize, maxThreadPoolSize, keepAliveTimeInMillis,
                     TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(jobQueueSize), rejectedExecutionHandler);*/
@@ -126,18 +167,23 @@ public final class SQSEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
-        isConnected = true;
+        SQSTask sqsTask = sqsProvider.getNewSQSTask();
+        executorService.scheduleAtFixedRate(sqsTask, 0, pollingInterval, TimeUnit.SECONDS);
+        for (int i=0; minThreadPoolSize-1 > 0 && i < minThreadPoolSize-1; i++) {
+            executorService.submit(sqsProvider.getNewSQSTask());
+        }
     }
 
     @Override
     public void disconnect() {
-        if (isConnected){
-            isConnected = false;
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
         }
     }
 
     @Override
     public void destroy() {
+
     }
 
     @Override
@@ -167,4 +213,6 @@ public final class SQSEventAdapter implements InputEventAdapter {
     public boolean isPolling() {
         return false;
     }
+
+
 }

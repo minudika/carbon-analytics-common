@@ -45,8 +45,9 @@ public class SQSEventAdapterServiceDS {
     protected void activate(ComponentContext context) {
 
         try {
-            InputEventAdapterFactory httpEventEventAdapterFactory = new SQSEventAdapterFactory();
-            context.getBundleContext().registerService(InputEventAdapterFactory.class.getName(), httpEventEventAdapterFactory, null);
+            InputEventAdapterFactory sqsEventEventAdapterFactory = new SQSEventAdapterFactory();
+            context.getBundleContext().registerService(InputEventAdapterFactory.class.getName(),
+                    sqsEventEventAdapterFactory, null);
             if (log.isDebugEnabled()) {
                 log.debug("Successfully deployed the input SQS adapter service");
             }

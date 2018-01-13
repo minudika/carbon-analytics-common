@@ -75,17 +75,17 @@ public class SQSEventAdapterFactory extends InputEventAdapterFactory {
         pollingInterval.setRequired(false);
         pollingInterval.setDisplayName(
                 resourceBundle.getString(SQSEventAdapterConstants.POLLING_INTERVAL_NAME));
-
-        // Wait time until messages available in the queue
+//
+//        // Wait time until messages available in the queue
         Property waitTime = new Property(SQSEventAdapterConstants.WAIT_TIME_NAME);
         waitTime.setRequired(false);
         waitTime.setDisplayName(
                 resourceBundle.getString(SQSEventAdapterConstants.WAIT_TIME_NAME));
-
-        // Wait time until messages available in the queue
+//
+//        // Wait time until messages available in the queue
         Property maxNumberOfMsgs = new Property(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME);
-        waitTime.setRequired(false);
-        waitTime.setDisplayName(
+        maxNumberOfMsgs.setRequired(false);
+        maxNumberOfMsgs.setDisplayName(
                 resourceBundle.getString(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME));
 
         propertyList.add(accessKeyProperty);
@@ -100,7 +100,7 @@ public class SQSEventAdapterFactory extends InputEventAdapterFactory {
 
     @Override
     public String getUsageTips() {
-        return "";
+        return "Test Field";
 //        return resourceBundle.getString(SQSEventAdapterConstants.ADAPTER_USAGE_TIPS_PREFIX) + httpPort + resourceBundle.getString(SQSEventAdapterConstants.ADAPTER_USAGE_TIPS_MID1) + httpsPort + resourceBundle.getString(SQSEventAdapterConstants.ADAPTER_USAGE_TIPS_MID2) + httpPort + resourceBundle.getString(SQSEventAdapterConstants.ADAPTER_USAGE_TIPS_MID3) + httpsPort + resourceBundle.getString(SQSEventAdapterConstants.ADAPTER_USAGE_TIPS_POSTFIX);
     }
 

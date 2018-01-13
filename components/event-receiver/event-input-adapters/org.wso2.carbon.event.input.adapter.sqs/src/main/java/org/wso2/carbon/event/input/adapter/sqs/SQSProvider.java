@@ -20,62 +20,24 @@ public class SQSProvider {
     private BasicAWSCredentials credentials;
     private AmazonSQS sqs;
     private InputEventAdapterListener eventAdapterListener;
+    private SQSConfig configs;
 
-    private String accessKey;
-    private String secretKey;
-    private String serviceEndPoint;
-    private String signingRegion;
-    private int waitTime;
-    private int pollingInterval;
-    private int maxNumberOfMessages;
-    private String queueURL;
-    private int visibilityTimeout;
+    public SQSProvider(SQSConfig configs, InputEventAdapterListener eventAdapterListener){
+        this.configs = configs;
+        BasicAWSCredentials credentials = new BasicAWSCredentials(configs.getAccessKey(), configs.getSecretKey());
+        AwsClientBuilder.EndpointConfiguration endpointConfiguration =
+                new AwsClientBuilder.EndpointConfiguration(configs.getServiceEndpoint(), configs.getSigningRegion());
 
-    private SQSConfig sqsConfigs;
-
-    public SQSProvider(InputEventAdapterConfiguration configs, InputEventAdapterListener eventAdapterListener){
-        Map adapterProperties = configs.getProperties();
-
-        if (adapterProperties != null) {
-            accessKey = adapterProperties.get(SQSEventAdapterConstants.ACCESS_KEY).toString();
-            secretKey = adapterProperties.get(SQSEventAdapterConstants.SECRET_KEY).toString();
-            serviceEndPoint = adapterProperties.get(SQSEventAdapterConstants.SERVICE_ENDPOINT).toString();
-            signingRegion = adapterProperties.get(SQSEventAdapterConstants.SIGNING_REGION).toString();
-            queueURL = adapterProperties.get(SQSEventAdapterConstants.QUEUE_URL).toString();
-
-            waitTime = adapterProperties.get(SQSEventAdapterConstants.WAIT_TIME_NAME) != null ?
-                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.WAIT_TIME_NAME).toString()) :
-                    SQSEventAdapterConstants.WAIT_TIME;
-
-            pollingInterval = adapterProperties.get(SQSEventAdapterConstants.POLLING_INTERVAL_NAME) != null ?
-                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.POLLING_INTERVAL_NAME).toString()) :
-                    SQSEventAdapterConstants.POLLING_INTERVAL;
-
-            maxNumberOfMessages = adapterProperties.get(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME) != null ?
-                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS_NAME).toString()) :
-                    SQSEventAdapterConstants.MAX_NUMBER_OF_MSGS;
-
-            visibilityTimeout = adapterProperties.get(SQSEventAdapterConstants.VISIBILITY_TIMEOUT_NAME) != null ?
-                    Integer.parseInt(adapterProperties.get(SQSEventAdapterConstants.VISIBILITY_TIMEOUT_NAME).toString()) :
-                    SQSEventAdapterConstants.VISIBILITY_TIMEOUT;
-
-            sqsConfigs = new SQSConfig(accessKey, secretKey, queueURL, pollingInterval, waitTime, maxNumberOfMessages,
-                    serviceEndPoint, signingRegion, visibilityTimeout);
-
-             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-             AwsClientBuilder.EndpointConfiguration endpointConfiguration =
-                        new AwsClientBuilder.EndpointConfiguration(serviceEndPoint, signingRegion);
-
-             sqs = AmazonSQSClientBuilder.standard()
-                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                     .withEndpointConfiguration(endpointConfiguration)
-                     .build();
-        }
+        sqs = AmazonSQSClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withEndpointConfiguration(endpointConfiguration)
+                .build();
     }
 
     public SQSTask getNewSQSTask() {
-        SQSEventAdapter.executorService.submit(new SQSTask(sqs, sqsConfigs, eventAdapterListener));
+        return new SQSTask(sqs, configs, eventAdapterListener);
     }
+
     public AmazonSQS getAWSSQSClient(){
         return sqs;
     }

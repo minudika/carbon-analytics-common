@@ -30,7 +30,7 @@
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Event Input SQS Adapter Module</name>
     <description>org.wso2.carbon.event.input.adapter.sqs provides the back-end
-        functionality of input http adapter
+        functionality of input sqs adapter
     </description>
     <url>http://wso2.org</url>
 

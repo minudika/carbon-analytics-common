@@ -102,6 +102,12 @@
             <type>zip</type>
             <version>${carbon.analytics.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
+            <artifactId>org.wso2.carbon.event.input.adapter.sqs.server.feature</artifactId>
+            <type>zip</type>
+            <version>${carbon.analytics.common.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -156,6 +162,9 @@
                                 </includedFeatureDef>
                                 <includedFeatureDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.event.input.adapter.wso2event.server.feature:${carbon.analytics.common.version}
+                                </includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.input.adapter.sqs.server.feature:${carbon.analytics.common.version}
                                 </includedFeatureDef>
                             </includedFeatures>
                         </configuration>

@@ -2,6 +2,9 @@ package org.wso2.carbon.event.input.adapter.sqs.internal;
 
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 
+/**
+ * Class to keep configuration related properties for SQS Event Adapter
+ **/
 public class SQSConfig {
     private String accessKey;
     private String secretKey;
@@ -48,44 +51,44 @@ public class SQSConfig {
         this.retryInterval = retryInterval;
     }
 
-    public String getAccessKey() {
+    String getAccessKey() {
         return accessKey;
     }
 
-    public String getSecretKey() {
+    String getSecretKey() {
         return secretKey;
     }
 
-    public String getQueueURL() {
+    String getQueueURL() {
         return queueURL;
     }
 
-    public Integer getWaitTime() {
+    Integer getWaitTime() {
         return waitTime;
     }
 
-    public int getMaxNumberOfMessages() {
+    int getMaxNumberOfMessages() {
         return maxNumberOfMessages;
     }
 
 
-    public String getSigningRegion() {
+    String getSigningRegion() {
         return signingRegion;
     }
 
-    public Integer getVisibilityTimeout() {
+    Integer getVisibilityTimeout() {
         return visibilityTimeout;
     }
 
-    public boolean shouldDeleteAfterConsuming() {
+    boolean shouldDeleteAfterConsuming() {
         return shouldDeleteAfterConsuming;
     }
 
-    public int getRetryCountLimit() {
+    int getRetryCountLimit() {
         return retryCountLimit;
     }
 
-    public int getRetryInterval() {
+    int getRetryInterval() {
         return retryInterval;
     }
 }

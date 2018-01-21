@@ -32,7 +32,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-
+/**
+ * SQS Input Event Adapter is an adapter for consuming messages from a queue
+ * provided by Amazon Simple Queue Service (SQS)
+ **/
 public final class SQSEventAdapter implements InputEventAdapter {
 
     private final InputEventAdapterConfiguration eventAdapterConfiguration;

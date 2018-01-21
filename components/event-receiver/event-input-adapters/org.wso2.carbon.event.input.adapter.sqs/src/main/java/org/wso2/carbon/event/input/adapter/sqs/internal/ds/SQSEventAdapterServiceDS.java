@@ -18,18 +18,11 @@ package org.wso2.carbon.event.input.adapter.sqs.internal.ds;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.osgi.service.http.HttpService;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
 import org.wso2.carbon.event.input.adapter.sqs.internal.SQSEventAdapterFactory;
-import org.wso2.carbon.user.core.service.RealmService;
 
 /**
- * @scr.component name="input.httpEventAdapterService.component" immediate="true"
- * @scr.reference name="user.realmservice.default"
- * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
- * @scr.reference name="http.service" interface="org.osgi.service.http.HttpService"
- * cardinality="1..1" policy="dynamic" bind="setHttpService" unbind="unsetHttpService"
+ * @scr.component name="input.sqsEventAdapterService.component" immediate="true"
  */
 
 
@@ -39,7 +32,6 @@ public class SQSEventAdapterServiceDS {
 
     /**
      * initialize the agent service here service here.
-     *
      * @param context
      */
     protected void activate(ComponentContext context) {
@@ -56,21 +48,4 @@ public class SQSEventAdapterServiceDS {
             log.error("Can not create the input SQS adapter service ", e);
         }
     }
-
-    protected void setRealmService(RealmService realmService) {
-        SQSEventAdapterServiceValueHolder.registerRealmService(realmService);
-    }
-
-    protected void unsetRealmService(RealmService realmService) {
-        SQSEventAdapterServiceValueHolder.registerRealmService(null);
-    }
-
-    protected void setHttpService(HttpService httpService) {
-        SQSEventAdapterServiceValueHolder.registerHTTPService(httpService);
-    }
-
-    protected void unsetHttpService(HttpService httpService) {
-        SQSEventAdapterServiceValueHolder.registerHTTPService(null);
-    }
-
 }

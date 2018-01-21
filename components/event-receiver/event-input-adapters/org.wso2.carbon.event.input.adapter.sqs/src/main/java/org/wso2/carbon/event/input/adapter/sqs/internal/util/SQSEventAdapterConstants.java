@@ -14,7 +14,9 @@
  */
 package org.wso2.carbon.event.input.adapter.sqs.internal.util;
 
-
+/**
+ * Util class to keep all the constants used in the SQSEventAdapter implementation
+ **/
 public final class SQSEventAdapterConstants {
 
     private SQSEventAdapterConstants() {

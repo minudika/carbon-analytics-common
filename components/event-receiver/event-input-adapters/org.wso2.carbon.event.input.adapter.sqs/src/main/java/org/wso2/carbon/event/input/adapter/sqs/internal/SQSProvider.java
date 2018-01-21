@@ -7,6 +7,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 
+/**
+ * Class to handle basic SQS instantiation
+ * and to create new threads for polling the queue
+ * */
 public class SQSProvider {
     private AmazonSQS sqs;
     private InputEventAdapterListener eventAdapterListener;
@@ -24,6 +28,10 @@ public class SQSProvider {
                 .build();
     }
 
+    /**
+     * Method to get new thread for polling the queue
+     * @return SQSTask
+     */
     public SQSTask getNewSQSTask() {
         return new SQSTask(sqs, configs, eventAdapterListener, tenantID);
     }

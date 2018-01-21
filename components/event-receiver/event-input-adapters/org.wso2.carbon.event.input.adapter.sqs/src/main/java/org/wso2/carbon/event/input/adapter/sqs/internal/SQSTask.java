@@ -14,6 +14,9 @@ import com.amazonaws.services.sqs.model.DeleteMessageResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
+/**
+ * A runnable to handle the taks of polling the queue and delete messages after consuming them as requested
+ **/
 public class SQSTask implements Runnable{
     private static final Log log = LogFactory.getLog(SQSTask.class);
 

@@ -1412,6 +1412,7 @@
         <xerces.xercesImpl.version>2.11.0</xerces.xercesImpl.version>
 
         <httpclient.httpcomponents.wso2.version>4.3.1.wso2v2</httpclient.httpcomponents.wso2.version>
+        <httpclient.httpcomponents.version>4.5.2</httpclient.httpcomponents.version>
         <httpcore.httpcomponents.wso2.version>4.3.3.wso2v1</httpcore.httpcomponents.wso2.version>
         <apache.httpcore.version>4.3.3</apache.httpcore.version>
 
@@ -1478,6 +1479,7 @@
         <xmlunit.version>1.6</xmlunit.version>
 
         <aws.java.sdk.sqs.version>1.11.261</aws.java.sdk.sqs.version>
+        <com.fasterxml.jackson.dataformat.cbor.version>2.9.3</com.fasterxml.jackson.dataformat.cbor.version>
 
         <libthrift.wso2.imp.pkg.version.range>[0.9.2.wso2v1, 1.0.0)</libthrift.wso2.imp.pkg.version.range>
     </properties>

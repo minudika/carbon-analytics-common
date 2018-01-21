@@ -79,22 +79,18 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-Package>
-                            org.wso2.carbon.event.input.adapter.sqs.internal,
-                            org.wso2.carbon.event.input.adapter.sqs.internal.*
-                        </Private-Package>
-                        <Export-Package>
-                            !org.wso2.carbon.event.input.adapter.sqs.internal,
-                            !org.wso2.carbon.event.input.adapter.sqs.internal.*,
-                            org.wso2.carbon.event.input.adapter.sqs.*,
-                        </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.event.input.adapter.core,
                             org.wso2.carbon.event.input.adapter.core.*,
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
-                            *;resolution:=optional,
+                            *;resolution:=optional
                         </Import-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.event.input.adapter.sqs.internal,
+                            !org.wso2.carbon.event.input.adapter.sqs.internal.*,
+                            org.wso2.carbon.event.input.adapter.sqs.*,
+                        </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

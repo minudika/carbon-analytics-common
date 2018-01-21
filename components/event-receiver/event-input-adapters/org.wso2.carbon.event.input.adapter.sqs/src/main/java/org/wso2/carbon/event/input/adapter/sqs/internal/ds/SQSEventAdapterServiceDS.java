@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
-import org.wso2.carbon.event.input.adapter.sqs.SQSEventAdapterFactory;
+import org.wso2.carbon.event.input.adapter.sqs.internal.SQSEventAdapterFactory;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**
